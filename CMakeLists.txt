@@ -1,0 +1,46 @@
+cmake_minimum_required(VERSION 3.10)
+project(RayTracer)
+
+set(CMAKE_CXX_STANDARD 17)
+
+# Enable new policy for GLVND
+cmake_policy(SET CMP0072 NEW)
+set(OpenGL_GL_PREFERENCE GLVND)
+
+# ImGui sources
+set(IMGUI_SOURCES
+    src/ImGui/imgui.cpp
+    src/ImGui/imgui_draw.cpp
+    src/ImGui/imgui_widgets.cpp
+    src/ImGui/imgui_tables.cpp
+    src/ImGui/backend/imgui_impl_glfw.cpp
+    src/ImGui/backend/imgui_impl_opengl3.cpp
+)
+
+add_library(imgui STATIC ${IMGUI_SOURCES})
+target_include_directories(imgui PUBLIC
+    include/ImGui
+    include/ImGui/backend
+)
+
+# Find required packages
+find_package(OpenGL REQUIRED)
+find_package(glfw3 REQUIRED)
+
+# Add main executable
+add_executable(raytracer
+    src/main.cpp
+    src/glad.c
+    src/WindowManager.cpp
+)
+
+# Include main include dir (for WindowManager.hpp etc.)
+target_include_directories(raytracer PRIVATE include)
+
+# Link all dependencies
+target_link_libraries(raytracer
+    imgui
+    glfw
+    OpenGL::GL
+    dl # required on Linux for glad
+)
