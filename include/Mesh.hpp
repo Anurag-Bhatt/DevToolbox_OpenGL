@@ -6,6 +6,7 @@ class Mesh{
 
 public:
     Mesh(std::vector<float> &vertices);
+    Mesh(std::vector<float> &vertices, std::vector<unsigned int> &indices);
     ~Mesh();
 
     void bind()const;
@@ -13,6 +14,6 @@ public:
 
 private:
 
-    unsigned int m_VAO, m_VBO;
-    int m_vertexCount;
+    unsigned int m_VAO = 0, m_VBO = 0, m_EBO = 0;
+    int m_vertexCount = 0, m_indexCount = 0;
 };

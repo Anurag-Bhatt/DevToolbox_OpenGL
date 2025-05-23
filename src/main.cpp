@@ -48,34 +48,31 @@ int main() {
     -0.5f,  0.5f, 0.0f   // top left
     };
 
-    unsigned int indices[] = {  // note that we start from 0!
+    std::vector<float> vertices = {
+    // x,    y,     z
+     0.5f,  0.5f,  0.0f,  // 0: top right
+     0.5f, -0.5f,  0.0f,  // 1: bottom right
+    -0.5f, -0.5f,  0.0f,  // 2: bottom left
+    -0.5f,  0.5f,  0.0f   // 3: top left
+    };
+
+    std::vector<unsigned int> indices = {  
+        // note that we start from 0!
         0, 1, 3,   // first triangle
         1, 2, 3    // second triangle
     }; 
 
-    // Generating and binding buffer to vertex data
     
     Mesh mesh1(triangle1);
     Mesh mesh2(triangle2);
 
-
-    // glGenBuffers(1, &EBO);
-    // glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, EBO);
-    // glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(indices), indices, GL_STATIC_DRAW);
-
-    // glBindBuffer(GL_ARRAY_BUFFER, 1);
-    // glBindVertexArray(1);
+    Mesh quad(vertices, indices);
 
     while (window.shoulBeOpen()) {
         window.pollEvents();
         
         window.clearBuffer(bgColor);
-        
-        
-        // glBindVertexArray(VAOs[1]);
-        // glDrawArrays(GL_TRIANGLES, 0, 3);
-        // glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
-        
+         
         window.beginUIFrame();
         
         // Your ImGui UI
@@ -84,20 +81,21 @@ int main() {
             ImGui::Text("Welcome to your Raytracer");
             
             static bool buttonPressed = false;
-            if(ImGui::Button("Render Two Triangles")){
+            if(ImGui::Button("Render a Quad")){
                 buttonPressed = !buttonPressed;
             }
 
             if(buttonPressed){
-                // glBindVertexArray(VAOs[0]);
-                // glDrawArrays(GL_TRIANGLES, 0, 3);
-                myShader.use();
-                mesh1.bind();
-                mesh1.draw();
 
                 myShader.use();
-                mesh2.bind();
-                mesh2.draw();
+                quad.bind();
+                quad.draw();
+                // mesh1.bind();
+                // mesh1.draw();
+
+                // myShader.use();
+                // mesh2.bind();
+                // mesh2.draw();
             }
 
             ImGui::End();
