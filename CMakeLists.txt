@@ -1,5 +1,7 @@
 cmake_minimum_required(VERSION 3.10)
-project(RayTracer)
+
+set(PROJECT_NAME pathtracer)
+project(${PROJECT_NAME})
 
 set(CMAKE_CXX_STANDARD 17)
 
@@ -28,17 +30,18 @@ find_package(OpenGL REQUIRED)
 find_package(glfw3 REQUIRED)
 
 # Add main executable
-add_executable(raytracer
+add_executable(${PROJECT_NAME}
     src/main.cpp
     src/glad.c
     src/WindowManager.cpp
+    src/Shader.cpp
 )
 
 # Include main include dir (for WindowManager.hpp etc.)
-target_include_directories(raytracer PRIVATE include)
+target_include_directories(${PROJECT_NAME} PRIVATE include)
 
 # Link all dependencies
-target_link_libraries(raytracer
+target_link_libraries(${PROJECT_NAME}
     imgui
     glfw
     OpenGL::GL

@@ -28,6 +28,7 @@ WindowManager::WindowManager(const int screenWidth, const int screenHeight, std:
 
     glfwSetWindowUserPointer(m_window, this);
     glfwSetKeyCallback(m_window, WindowManager::keyCallback); 
+    glfwSetFramebufferSizeCallback(m_window, WindowManager::frameBufferSizeCallback);
 
     initImGui();
 
@@ -71,7 +72,6 @@ void WindowManager::beginUIFrame() const
 void WindowManager::renderUI(Color &bgColor) const
 {
     ImGui::Render();
-    clearBuffer(bgColor);
     ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
 }
 
@@ -116,6 +116,11 @@ void WindowManager::cleanUp()
 {
 
     glfwTerminate();
+}
+
+void WindowManager::frameBufferSizeCallback(GLFWwindow *window, int width, int height)
+{
+    glViewport(0, 0, width, height);
 }
 
 void WindowManager::keyCallback(GLFWwindow *window, int key, int scancode, int action, int mods)
