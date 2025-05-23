@@ -61,8 +61,6 @@ void WindowManager::clearBuffer(Color &color) const
     glClear(GL_COLOR_BUFFER_BIT);
 }
 
-
-
 void WindowManager::beginUIFrame() const
 {
     ImGui_ImplOpenGL3_NewFrame();
