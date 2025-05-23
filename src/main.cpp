@@ -2,6 +2,7 @@
 #include <GLFW/glfw3.h>
 #include <iostream>
 #include <filesystem>
+#include <cmath>
 
 #include "imgui.h"
 
@@ -69,10 +70,9 @@ int main() {
     Mesh quad(vertices, indices);
 
     while (window.shoulBeOpen()) {
-        window.pollEvents();
         
-        window.clearBuffer(bgColor);
-         
+        window.pollEvents();
+        window.clearBuffer(bgColor); 
         window.beginUIFrame();
         
         // Your ImGui UI
@@ -87,6 +87,7 @@ int main() {
 
             if(buttonPressed){
 
+                myShader.setFloat("greenValue", sin(glfwGetTime()));
                 myShader.use();
                 quad.bind();
                 quad.draw();

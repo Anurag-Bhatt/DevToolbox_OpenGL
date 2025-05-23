@@ -42,6 +42,24 @@ unsigned int Shader::getProgram() const
     return m_ProgramID;
 }
 
+void Shader::setBool(const std::string &name, bool value) const
+{
+    int uLocation = glGetUniformLocation(m_ProgramID, name.c_str());
+    glUniform1i(uLocation, value);
+}
+
+void Shader::setInt(const std::string &name, int value) const
+{
+    int uLocation = glGetUniformLocation(m_ProgramID, name.c_str());
+    glUniform1i(uLocation, value);
+}
+
+void Shader::setFloat(const std::string &name, float value) const
+{
+    int uLocation = glGetUniformLocation(m_ProgramID, name.c_str());
+    glUniform1f(uLocation, value);
+}
+
 void Shader::printShaders()
 {
     std::cout << "Vertex Shader \n" << m_VShader << std::endl;
