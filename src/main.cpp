@@ -15,17 +15,6 @@ const int SCREEN_HEIGHT = 720;
 
 Color bgColor = {0.2f, 0.3f, 0.3f, 1.0f};
 
-/*
-    (DONE)Try to draw 2 triangles next to each other using glDrawArrays by adding more vertices to your data: 
-    solution.
-    
-    (Done)Now create the same 2 triangles using two different VAOs and VBOs for their data: solution.
-    
-    (Done)Create two shader programs where the second program uses a different fragment shader that outputs 
-    the color yellow; draw both triangles again where one outputs the color yellow: solution.
-
-*/
-
 int main() {
 
     std::cout << "Current Working Directory: " << std::filesystem::current_path() << std::endl;
@@ -51,10 +40,10 @@ int main() {
 
     std::vector<float> vertices = {
     // x,    y,     z
-     0.5f,  0.5f,  0.0f,  // 0: top right
-     0.5f, -0.5f,  0.0f,  // 1: bottom right
-    -0.5f, -0.5f,  0.0f,  // 2: bottom left
-    -0.5f,  0.5f,  0.0f   // 3: top left
+     0.5f,  0.5f,  0.0f, 1.0f, 0.0f, 0.0f, // 0: top right
+     0.5f, -0.5f,  0.0f, 0.0f, 1.0f, 0.0f, // 1: bottom right
+    -0.5f, -0.5f,  0.0f, 0.0f, 0.0f, 1.0f, // 2: bottom left
+    -0.5f,  0.5f,  0.0f, 1.0f, 1.0f, 1.0f // 3: top left
     };
 
     std::vector<unsigned int> indices = {  
@@ -87,7 +76,8 @@ int main() {
 
             if(buttonPressed){
 
-                myShader.setFloat("greenValue", sin(glfwGetTime()));
+                myShader.setFloat("xTransform", sin(glfwGetTime()));
+                myShader.setFloat("yTransform", cos(glfwGetTime()));
                 myShader.use();
                 quad.bind();
                 quad.draw();
