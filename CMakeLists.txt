@@ -35,6 +35,7 @@ add_executable(${PROJECT_NAME}
     src/glad.c
     src/WindowManager.cpp
     src/Shader.cpp
+    src/Mesh.cpp
 )
 
 # Include main include dir (for WindowManager.hpp etc.)

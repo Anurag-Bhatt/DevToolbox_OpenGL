@@ -17,14 +17,14 @@ Shader::Shader(std::string vertexPath, std::string fragmentPath)
         m_VShader = vStream.str();
         m_FShader = fStream.str();
 
-        printShaders();
+        // printShaders();
         compileShaders();
 
         attachProgram();
 
     }else{
-        if(!vertexFile) std::cout << "Error opening file at : " << vertexPath << std::endl;
-        if(!fragmentFile) std::cout << "Error opening file at: " << fragmentPath << std::endl; 
+        if(!vertexFile) std::cout   << "Error opening file at : "   << vertexPath   << std::endl;
+        if(!fragmentFile) std::cout << "Error opening file at: "    << fragmentPath << std::endl; 
     }
 }
 

@@ -7,6 +7,7 @@
 
 #include "WindowManager.hpp"
 #include "Shader.hpp"
+#include "Mesh.hpp"
 
 const int SCREEN_WIDTH = 1280;
 const int SCREEN_HEIGHT = 720;
@@ -33,14 +34,14 @@ int main() {
     Shader myShader("../shaders/screen.vert", "../shaders/raytrace.frag");
 
     
-    float vertices[] = {
+    std::vector<float> triangle1 = {
     // first triangle
      0.5f,  0.5f, 0.0f,  // top right
      0.5f, -0.5f, 0.0f,  // bottom right
     -0.5f,  0.5f, 0.0f  // top left 
     }; 
 
-    float vertices2ndTriangle[] = {
+    std::vector<float> triangle2 = {
     // second triangle
      0.5f, -0.5f, 0.0f,  // bottom right
     -0.5f, -0.5f, 0.0f,  // bottom left
@@ -53,24 +54,10 @@ int main() {
     }; 
 
     // Generating and binding buffer to vertex data
-    unsigned int VBOs[2], VAOs[2], EBO;
+    
+    Mesh mesh1(triangle1);
+    Mesh mesh2(triangle2);
 
-    glGenVertexArrays(2, VAOs);
-    glGenBuffers(2, VBOs);
-
-    // Triangle 1 setup
-    glBindVertexArray(VAOs[0]);
-    glBindBuffer(GL_ARRAY_BUFFER, VBOs[0]);
-    glBufferData(GL_ARRAY_BUFFER, sizeof(vertices), vertices, GL_STATIC_DRAW);
-    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(float), (void*)0);
-    glEnableVertexAttribArray(0);
-
-    // Triangle 2 setup
-    glBindVertexArray(VAOs[1]);
-    glBindBuffer(GL_ARRAY_BUFFER, VBOs[1]);
-    glBufferData(GL_ARRAY_BUFFER, sizeof(vertices2ndTriangle), vertices2ndTriangle, GL_STATIC_DRAW);
-    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(float), (void*)0);
-    glEnableVertexAttribArray(0);
 
     // glGenBuffers(1, &EBO);
     // glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, EBO);
@@ -81,27 +68,41 @@ int main() {
 
     while (window.shoulBeOpen()) {
         window.pollEvents();
-
+        
         window.clearBuffer(bgColor);
-
-        myShader.use();
-        glBindVertexArray(VAOs[0]);
-        glDrawArrays(GL_TRIANGLES, 0, 3);
-
-        myShader.use();
-        glBindVertexArray(VAOs[1]);
-        glDrawArrays(GL_TRIANGLES, 0, 3);
+        
+        
+        // glBindVertexArray(VAOs[1]);
+        // glDrawArrays(GL_TRIANGLES, 0, 3);
         // glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
         
         window.beginUIFrame();
-
+        
         // Your ImGui UI
         if(window.showUI){
-        ImGui::Begin("Controls");
-        ImGui::Text("Welcome to your Raytracer");
-        ImGui::End();
-        }
+            ImGui::Begin("Settings");
+            ImGui::Text("Welcome to your Raytracer");
+            
+            static bool buttonPressed = false;
+            if(ImGui::Button("Render Two Triangles")){
+                buttonPressed = !buttonPressed;
+            }
 
+            if(buttonPressed){
+                // glBindVertexArray(VAOs[0]);
+                // glDrawArrays(GL_TRIANGLES, 0, 3);
+                myShader.use();
+                mesh1.bind();
+                mesh1.draw();
+
+                myShader.use();
+                mesh2.bind();
+                mesh2.draw();
+            }
+
+            ImGui::End();
+        }
+        
         window.renderUI(bgColor);
 
         window.swapBuffers();
