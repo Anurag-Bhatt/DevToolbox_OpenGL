@@ -1,5 +1,7 @@
 # Real-Time Raytracer (Work In Progress)
 
+![Preview](docs/images/welcome.png)
+
 ## Overview
 
 This project is a **real-time ray tracing renderer** built with **C++**, **OpenGL**, and **GLFW**.  
