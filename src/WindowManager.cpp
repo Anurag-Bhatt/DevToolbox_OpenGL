@@ -27,8 +27,8 @@ WindowManager::WindowManager(const int screenWidth, const int screenHeight, std:
     }
 
     glfwSetWindowUserPointer(m_window, this);
-    glfwSetKeyCallback(m_window, WindowManager::keyCallback); 
-    glfwSetFramebufferSizeCallback(m_window, WindowManager::frameBufferSizeCallback);
+    glfwSetKeyCallback(m_window, keyCallback); 
+    glfwSetFramebufferSizeCallback(m_window, frameBufferSizeCallback);
 
     initImGui();
 

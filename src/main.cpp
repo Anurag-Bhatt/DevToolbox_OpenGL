@@ -9,6 +9,7 @@
 #include "WindowManager.hpp"
 #include "Shader.hpp"
 #include "Mesh.hpp"
+#include "Texture.hpp"
 
 const int SCREEN_WIDTH = 1280;
 const int SCREEN_HEIGHT = 720;
@@ -23,7 +24,6 @@ int main() {
     
     Shader myShader("../shaders/screen.vert", "../shaders/raytrace.frag");
 
-    
     std::vector<float> triangle1 = {
     // first triangle
      0.5f,  0.5f, 0.0f,  // top right
@@ -39,11 +39,11 @@ int main() {
     };
 
     std::vector<float> vertices = {
-    // x,    y,     z
-     0.5f,  0.5f,  0.0f, 1.0f, 0.0f, 0.0f, // 0: top right
-     0.5f, -0.5f,  0.0f, 0.0f, 1.0f, 0.0f, // 1: bottom right
-    -0.5f, -0.5f,  0.0f, 0.0f, 0.0f, 1.0f, // 2: bottom left
-    -0.5f,  0.5f,  0.0f, 1.0f, 1.0f, 1.0f // 3: top left
+    // x,    y,     z       // colors       texture coords
+     0.5f,  0.5f,  0.0f, 1.0f, 0.0f, 0.0f, 1.0f, 1.0f,   // 0: top right
+     0.5f, -0.5f,  0.0f, 0.0f, 1.0f, 0.0f, 1.0f, 0.0f,// 1: bottom right
+    -0.5f, -0.5f,  0.0f, 0.0f, 0.0f, 1.0f, 0.0f, 0.0f,// 2: bottom left
+    -0.5f,  0.5f,  0.0f, 1.0f, 1.0f, 1.0f, 0.0f, 1.0f // 3: top left
     };
 
     std::vector<unsigned int> indices = {  
@@ -52,11 +52,20 @@ int main() {
         1, 2, 3    // second triangle
     }; 
 
-    
+    float textureCoordinates[] = {
+        0.0f, 0.0f,
+        1.0f, 0.0f,
+        0.0f, 1.0f,
+        1.0f, 1.0f
+    };
+
+
     Mesh mesh1(triangle1);
     Mesh mesh2(triangle2);
 
     Mesh quad(vertices, indices);
+
+    Texture tex("../assets/images/container.jpg");
 
     while (window.shoulBeOpen()) {
         
@@ -74,19 +83,14 @@ int main() {
                 buttonPressed = !buttonPressed;
             }
 
-            if(buttonPressed){
+            if(buttonPressed)
+            {
 
-                myShader.setFloat("xTransform", sin(glfwGetTime()));
-                myShader.setFloat("yTransform", cos(glfwGetTime()));
                 myShader.use();
+
+                tex.bind();
                 quad.bind();
                 quad.draw();
-                // mesh1.bind();
-                // mesh1.draw();
-
-                // myShader.use();
-                // mesh2.bind();
-                // mesh2.draw();
             }
 
             ImGui::End();

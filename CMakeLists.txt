@@ -36,6 +36,7 @@ add_executable(${PROJECT_NAME}
     src/WindowManager.cpp
     src/Shader.cpp
     src/Mesh.cpp
+    src/Texture.cpp
 )
 
 # Include main include dir (for WindowManager.hpp etc.)

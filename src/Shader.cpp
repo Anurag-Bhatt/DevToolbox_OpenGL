@@ -80,7 +80,7 @@ void Shader::compileShaders()
     if (!success)
     {
         glGetShaderInfoLog(m_vShaderID, 512, NULL, infoLog);
-        std::cout << "ERROR::SHADER::VERTEX::COMPILATION_FAILED\n" << infoLog << std::endl;
+        std::cerr << "ERROR::SHADER::VERTEX::COMPILATION_FAILED\n" << infoLog << std::endl;
     }
 
     m_fShaderID = glCreateShader(GL_FRAGMENT_SHADER);
@@ -92,7 +92,7 @@ void Shader::compileShaders()
     if (!success)
     {
         glGetShaderInfoLog(m_fShaderID, 512, NULL, infoLog);
-        std::cout << "ERROR::SHADER::FRAGMENT::COMPILATION_FAILED\n" << infoLog << std::endl;
+        std::cerr << "ERROR::SHADER::FRAGMENT::COMPILATION_FAILED\n" << infoLog << std::endl;
     }
 }
 
@@ -108,7 +108,7 @@ void Shader::attachProgram()
     glGetProgramiv(m_ProgramID, GL_LINK_STATUS, &success);
     if (!success) {
         glGetProgramInfoLog(m_ProgramID, 512, NULL, infoLog);
-        std::cout << "ERROR::SHADER::PROGRAM::LINKING_FAILED\n" << infoLog << std::endl;
+        std::cerr << "ERROR::SHADER::PROGRAM::LINKING_FAILED\n" << infoLog << std::endl;
     }
 
     glDeleteShader(m_vShaderID);
