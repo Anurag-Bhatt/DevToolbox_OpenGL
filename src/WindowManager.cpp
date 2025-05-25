@@ -147,5 +147,11 @@ void WindowManager::handleKeyInput(int key, int scancode, int action, int mods)
         showUI = !showUI;
     }
 
+    if(key == GLFW_KEY_UP && action == GLFW_PRESS){
+        mixParameter += 0.1;
+    }else if(key == GLFW_KEY_DOWN && action == GLFW_PRESS){
+        mixParameter -= 0.01;
+    }
+
 
 }

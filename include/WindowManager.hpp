@@ -28,6 +28,7 @@ public:
 
     GLFWwindow* getWindow();
 
+    float mixParameter;
 private:
 
     GLFWwindow* m_window;
@@ -36,6 +37,7 @@ private:
 
     std::string m_title;
     bool isFullscreen;
+
 
     void init();
     void initImGui();

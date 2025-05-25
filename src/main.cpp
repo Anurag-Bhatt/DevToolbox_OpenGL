@@ -39,11 +39,11 @@ int main() {
     };
 
     std::vector<float> vertices = {
-    // x,    y,     z       // colors       texture coords
-     0.5f,  0.5f,  0.0f, 1.0f, 0.0f, 0.0f, 1.0f, 1.0f,   // 0: top right
-     0.5f, -0.5f,  0.0f, 0.0f, 1.0f, 0.0f, 1.0f, 0.0f,// 1: bottom right
-    -0.5f, -0.5f,  0.0f, 0.0f, 0.0f, 1.0f, 0.0f, 0.0f,// 2: bottom left
-    -0.5f,  0.5f,  0.0f, 1.0f, 1.0f, 1.0f, 0.0f, 1.0f // 3: top left
+    // x,    y,     z           // colors       texture coords
+     0.5f,  0.5f,  0.0f,     1.0f, 0.0f, 0.0f,   1.0f, 1.0f,      // 0: top right
+     0.5f, -0.5f,  0.0f,     0.0f, 1.0f, 0.0f,   1.0f, 0.0f,      // 1: bottom right
+    -0.5f, -0.5f,  0.0f,     0.0f, 0.0f, 1.0f,   0.0f, 0.0f,      // 2: bottom left
+    -0.5f,  0.5f,  0.0f,     1.0f, 1.0f, 1.0f,   0.0f, 1.0f       // 3: top left
     };
 
     std::vector<unsigned int> indices = {  
@@ -52,20 +52,15 @@ int main() {
         1, 2, 3    // second triangle
     }; 
 
-    float textureCoordinates[] = {
-        0.0f, 0.0f,
-        1.0f, 0.0f,
-        0.0f, 1.0f,
-        1.0f, 1.0f
-    };
-
-
     Mesh mesh1(triangle1);
     Mesh mesh2(triangle2);
 
     Mesh quad(vertices, indices);
+    quad.setLayout({3, 3, 2});
 
-    Texture tex("../assets/images/container.jpg");
+    Texture tex1("../assets/images/container.jpg");
+    Texture tex2("../assets/images/awesomeface.png");
+
 
     while (window.shoulBeOpen()) {
         
@@ -87,8 +82,14 @@ int main() {
             {
 
                 myShader.use();
+                tex1.bind();
+                myShader.setInt("texture2", 0);
+                tex2.bind(1);
+                myShader.setInt("texture2", 1);
 
-                tex.bind();
+                static float mixParameter;
+                ImGui::InputFloat("Mix Parameter", &mixParameter, 0.01, 0.1);
+                myShader.setFloat("mixParameter", mixParameter);
                 quad.bind();
                 quad.draw();
             }

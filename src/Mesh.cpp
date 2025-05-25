@@ -2,7 +2,7 @@
 #include "Mesh.hpp"
 
 Mesh::Mesh(std::vector<float> &vertices)
-: m_vertexCount(vertices.size() / 3), m_EBO(0)
+: m_vertexCount(vertices.size() / 3), m_EBO(0), m_layout(0)
 {
      // Triangles have 3 vertices
 
@@ -14,14 +14,10 @@ Mesh::Mesh(std::vector<float> &vertices)
     glBindBuffer(GL_ARRAY_BUFFER, m_VBO);
     glBufferData(GL_ARRAY_BUFFER, vertices.size() * sizeof(float) , vertices.data() , GL_STATIC_DRAW);
 
-    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(float), (void*)0);
-    glEnableVertexAttribArray(0);
-
-    glBindVertexArray(0);
 }
 
 Mesh::Mesh(std::vector<float> &vertices, std::vector<unsigned int> &indices)
-: m_indexCount(indices.size()), m_EBO(0)
+: m_indexCount(indices.size()), m_EBO(0), m_layout(0)
 {
     glGenVertexArrays(1, &m_VAO);
     glGenBuffers(1, &m_VBO);
@@ -35,16 +31,6 @@ Mesh::Mesh(std::vector<float> &vertices, std::vector<unsigned int> &indices)
     glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, m_EBO);
     glBufferData(GL_ELEMENT_ARRAY_BUFFER, indices.size() * sizeof(unsigned int), indices.data(), GL_STATIC_DRAW);
 
-    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 8 * sizeof(float), (void*)0);
-    glEnableVertexAttribArray(0);
-
-    glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 8 * sizeof(float), (void*)(3 * sizeof(float)));
-    glEnableVertexAttribArray(1);
-
-    glVertexAttribPointer(2, 2, GL_FLOAT, GL_FALSE, 8 * sizeof(float), (void*)(6 * sizeof(float)));
-    glEnableVertexAttribArray(2); 
-
-    glBindVertexArray(0);
 }
 
 Mesh::~Mesh()
@@ -60,6 +46,10 @@ void Mesh::bind() const
 {
     glBindVertexArray(m_VAO);
 }
+void Mesh::unbind() const
+{
+    glBindVertexArray(0);
+}
 
 void Mesh::draw() const
 {
@@ -69,5 +59,26 @@ void Mesh::draw() const
         
     }else{
         glDrawElements(GL_TRIANGLES, static_cast<GLsizei>(m_indexCount), GL_UNSIGNED_INT, 0);
+    }
+}
+
+void Mesh::setLayout(const std::vector<unsigned int> &layout)
+{
+    m_layout = layout;
+    for(auto count : m_layout){
+        m_stride += (count * sizeof(float));
+    }
+    setupAttribs();
+    unbind();
+}
+
+void Mesh::setupAttribs()
+{
+    size_t offset = 0;
+    for(unsigned int i = 0; i < m_layout.size(); i++){
+    
+    glVertexAttribPointer(i, m_layout[i], GL_FLOAT, GL_FALSE, m_stride, (void*)(offset*sizeof(float)));
+    glEnableVertexAttribArray(i);
+    offset += m_layout[i];
     }
 }
