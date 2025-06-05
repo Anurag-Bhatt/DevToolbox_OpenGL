@@ -1,48 +1,77 @@
-# 🔲 Minimal OpenGL Abstraction - LearnOpenGL Companion Project
+#  DevToolbox - OpenGL + ImGui Playground
 
-This is a modern C++ OpenGL project that builds lightweight abstractions over core OpenGL functionality as I progress through the [LearnOpenGL](https://learnopengl.com/) book. The goal is to understand each concept deeply by implementing everything from scratch using clean and idiomatic C++.
-
-## ✅ Features Implemented
-
-### 1. 🪟 WindowManager
-- GLFW-based window creation and management.
-- Integrated with `glad` for OpenGL function loading.
-- Handles input events and UI toggling.
-
-### 2. 🔦 Shader
-- Reads GLSL shader code from files.
-- Compiles and links shader programs.
-- Provides an easy `.use()` interface.
-- Prints meaningful compile/link errors.
-
-### 3. 🧱 Mesh
-- Abstracts VAO, VBO, and (optionally) EBO.
-- Supports both indexed and non-indexed drawing.
-- Clean and extensible C++ class interface.
-- Smart default behaviors: if EBO is not needed, it is skipped entirely.
-
-### 🛠️ Coming Next
-- 🎨 Texture abstraction.
-- 📝 Dev blog with technical breakdowns and insights.
+A modular C++ rendering sandbox built using OpenGL, GLFW, and ImGui, designed as a foundation for real-time 3D visualization, interactive shader tweaking, and engine/tool development.
 
 ---
 
-## 🚀 Getting Started
+##  Current Features
 
-### Prerequisites
-- C++17 or later
-- CMake 3.15+
+-  **Keyboard & Mouse Camera Controls**
+  - `WASD` to move, mouse to look around (toggle with `M`)
+  - Adjustable camera speed via UI
+
+-  **3D Rendering**
+  - Render textured cubes with transformations
+  - Per-object rotation animation based on time
+  - Uses vertex and fragment shaders
+
+-  **ImGui UI Integration**
+  - Toggle visibility with `Tab`
+  - Modify:
+    - `mixParameter` (controls blend between two textures)
+    - `rotationSpeed`
+    - `cameraSpeed`
+  - Button to trigger cube rendering
+
+-  **Basic OpenGL Abstractions**
+  - `Mesh`, `Shader`, `Texture`, `WindowManager` classes
+  - Uses GLM for matrix math
+
+---
+
+## 🔧 Build Instructions
+
+### Dependencies
 - OpenGL 3.3+
-- [glad](https://glad.dav1d.de/) (used as a loader)
-- [GLFW](https://www.glfw.org/) (for window + input)
-- [Dear ImGui](https://github.com/ocornut/imgui) (for UI)
+- GLFW
+- GLAD
+- ImGui
+- GLM
+- stb_image
 
-### Clone and Build
-
-```bash
-git clone https://github.com/Anurag-Bhatt/minimal-opengl-abstraction.git
-cd minimal-opengl-abstraction
-mkdir build && cd build
+### How to Build?
+```  
+mkdir -p build
+cd build
 cmake ..
 make
-./OpenGLApp
+```
+---
+
+## 🚧 Planned Improvements
+
+- [ ] SceneObject abstraction to manage individual objects
+- [ ] UI panels for object transforms and shader controls
+- [ ] Hot-reload shaders from file
+- [ ] Save/load scene data (JSON or binary)
+- [ ] Visual debugger (e.g. wireframes, bounding boxes)
+- [ ] Shader editor with live code injection
+
+---
+
+## 📸 Screenshots
+> 
+![Texture](docs/images/Quad_Display.png)
+![UI](docs/images/UI_Display.png)
+![Blank](docs/images/welcome.png)
+
+---
+
+## 💬 License
+MIT License — feel free to fork and build upon this for your own tools or engine experiments.
+
+---
+
+## ✍️ Author
+Anurag Bhatt  
+🔗 [GitHub](https://github.com/Anurag-Bhatt) || [LinkedIn](https://linkedin.com/in/anuragbhatt1911)

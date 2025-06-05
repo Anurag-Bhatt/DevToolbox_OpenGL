@@ -34,15 +34,6 @@ int main() {
     
     Shader myShader("../shaders/screen.vert", "../shaders/raytrace.frag");
 
-
-    // std::vector<float> vertices = {
-    // // x,    y,     z           // colors       texture coords
-    //  0.5f,  0.5f,  0.0f,     1.0f, 0.0f, 0.0f,   1.0f, 1.0f,      // 0: top right
-    //  0.5f, -0.5f,  0.0f,     0.0f, 1.0f, 0.0f,   1.0f, 0.0f,      // 1: bottom right
-    // -0.5f, -0.5f,  0.0f,     0.0f, 0.0f, 1.0f,   0.0f, 0.0f,      // 2: bottom left
-    // -0.5f,  0.5f,  0.0f,     1.0f, 1.0f, 1.0f,   0.0f, 1.0f       // 3: top left
-    // };
-
     std::vector<float> cubeVertices = {
         -0.5f, -0.5f, -0.5f,  0.0f, 0.0f,
          0.5f, -0.5f, -0.5f,  1.0f, 0.0f,
@@ -98,14 +89,6 @@ int main() {
 
     Texture tex1("../assets/images/container.jpg");
     Texture tex2("../assets/images/awesomeface.png");
-
-
-    // glm::vec4 vec(1.0f, 0.0f, 0.0f, 1.0f);
-    // glm::mat4 trans(1.0f);
-    // trans = glm::translate(trans, glm::vec3(1.0f, 1.0f, 0.0f));
-    // vec = trans * vec;
-
-    // std::cout << vec.x << " " << vec.y << " " << vec.z << std::endl;
  
     glm::mat4 trans(1.0f);
     
@@ -131,8 +114,7 @@ int main() {
 
     while (window.shoulBeOpen()) {
         
-        float deltaTime = window.deltaTime();
-        std::cout << deltaTime << " is the deltaTime\n";
+        std::cout << window.deltaTime() << " is the deltaTime\n";
         window.processInput();
         window.clearBuffer(bgColor); 
         window.beginUIFrame();
@@ -150,7 +132,7 @@ int main() {
             ImGui::Text("Welcome to your Raytracer");
             
             static bool buttonPressed = false;
-            if(ImGui::Button("Render a Quad")){
+            if(ImGui::Button("Render cubes")){
                 buttonPressed = !buttonPressed;
             }
 
@@ -166,7 +148,7 @@ int main() {
                 ImGui::InputFloat("Mix Parameter", &mixParameter, 0.01, 0.1);
                 myShader.setFloat("mixParameter", mixParameter);
                 static float rotationSpeed;
-                ImGui::InputFloat("Rotation Speed", &rotationSpeed);
+                ImGui::InputFloat("Rotation Speed", &rotationSpeed, 0.01, 0.1);
                 // glm::mat4 rotate(1.0f);
                 // model = glm::rotate(model, deltaTime * rotationSpeed *glm::radians(50.0f), glm::vec3(1.0f, 0.0f, 0.0f));
                 tex1.bind();
@@ -180,7 +162,7 @@ int main() {
             
                     glm::mat4 model = glm::mat4(1.0f);
                     model = glm::translate(model, cubePositions[i]);
-                    float angle = 20.0f * i; 
+                    float angle = 20.0f * i * sin(glfwGetTime()); 
                     model = glm::rotate(model, rotationSpeed * glm::radians(angle), glm::vec3(1.0f, 0.3f, 0.5f));
                     myShader.setMat4("model", model);
                     quad.draw();
