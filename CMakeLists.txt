@@ -39,7 +39,7 @@ add_executable(${PROJECT_NAME}
     src/Texture.cpp
 )
 
-# Include main include dir (for WindowManager.hpp etc.)
+# Include main include dir
 target_include_directories(${PROJECT_NAME} PRIVATE include)
 
 # Link all dependencies

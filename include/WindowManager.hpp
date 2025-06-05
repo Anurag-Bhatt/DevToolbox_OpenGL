@@ -1,6 +1,7 @@
 #pragma once
 #include <string>
 #include <GLFW/glfw3.h>
+#include <glm/glm.hpp>
 
 struct Color{
     float r;
@@ -26,9 +27,22 @@ public:
     void beginUIFrame() const;
     void renderUI(Color &bgColor) const;
 
-    GLFWwindow* getWindow();
+    float getAspectRatio()const;
+    float deltaTime();
 
-    float mixParameter;
+    GLFWwindow* getWindow();
+    void processInput();
+
+    glm::vec3 cameraPos   = glm::vec3(0.0f, 0.0f,  3.0f);
+    glm::vec3 cameraFront = glm::vec3(0.0f, 0.0f, -1.0f);
+    glm::vec3 cameraUp    = glm::vec3(0.0f, 1.0f,  0.0f);
+    float cameraSpeed = 1.0f, yawAngle = -90.0f, pitchAngle = 0.0f;
+    float mouseSentivity = 0.1f;
+    bool m_firstMouse = true;;
+    float mouseLastX, mouseLastY;
+
+    bool controlMouse = false;
+
 private:
 
     GLFWwindow* m_window;
@@ -38,6 +52,8 @@ private:
     std::string m_title;
     bool isFullscreen;
 
+    float m_lastFrameTime = 0.0f;
+    float m_deltaTime = 0.0f;
 
     void init();
     void initImGui();

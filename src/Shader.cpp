@@ -60,6 +60,12 @@ void Shader::setFloat(const std::string &name, float value) const
     glUniform1f(uLocation, value);
 }
 
+void Shader::setMat4(const std::string &name, glm::mat4 trans) const
+{
+    unsigned int uniformLocation = glGetUniformLocation(m_ProgramID, name.c_str());
+    glUniformMatrix4fv(uniformLocation, 1, GL_FALSE, glm::value_ptr(trans));
+}
+
 void Shader::printShaders()
 {
     std::cout << "Vertex Shader \n" << m_VShader << std::endl;

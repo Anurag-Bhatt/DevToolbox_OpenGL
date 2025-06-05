@@ -11,6 +11,7 @@
 WindowManager::WindowManager(const int screenWidth, const int screenHeight, std::string windowTitle)
 : m_width(screenWidth), m_height(screenHeight), m_title(windowTitle)
 {
+
     init();
 
     m_window = glfwCreateWindow(m_width, m_height, m_title.c_str(), nullptr, nullptr);
@@ -25,6 +26,8 @@ WindowManager::WindowManager(const int screenWidth, const int screenHeight, std:
         std::cerr << "Failed to initialize GLAD\n";
         return;
     }
+
+    glEnable(GL_DEPTH_TEST); 
 
     glfwSetWindowUserPointer(m_window, this);
     glfwSetKeyCallback(m_window, keyCallback); 
@@ -59,7 +62,7 @@ void WindowManager::pollEvents() const
 void WindowManager::clearBuffer(Color &color) const
 {
     glClearColor(color.r, color.g, color.b, color.a);
-    glClear(GL_COLOR_BUFFER_BIT);
+    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 }
 
 void WindowManager::beginUIFrame() const
@@ -75,10 +78,82 @@ void WindowManager::renderUI(Color &bgColor) const
     ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
 }
 
+float WindowManager::getAspectRatio() const
+{
+    return static_cast<float>(m_width/m_height);
+}
+
+float WindowManager::deltaTime()
+{
+    float currentTime = static_cast<float>(glfwGetTime());
+    m_deltaTime = currentTime - m_lastFrameTime;
+    m_lastFrameTime = currentTime;
+
+    return m_deltaTime;
+}
+
 GLFWwindow *WindowManager::getWindow()
 {
     return m_window;
 }
+
+void WindowManager::processInput()
+{
+    std::cout << "Processing Input \n";
+
+    float speed = cameraSpeed * m_deltaTime;
+    if(glfwGetKey(m_window, GLFW_KEY_W) == GLFW_PRESS){
+        cameraPos += speed * cameraFront;
+        std::cout << "W pressed \n";
+    }
+    if(glfwGetKey(m_window, GLFW_KEY_S) == GLFW_PRESS){
+        cameraPos -= speed * cameraFront;
+        std::cout << "S pressed \n";
+    }
+    if(glfwGetKey(m_window, GLFW_KEY_A) == GLFW_PRESS){
+        cameraPos -= glm::normalize(glm::cross(cameraFront, cameraUp)) * speed;
+        std::cout << "A pressed \n";
+    }
+    if(glfwGetKey(m_window, GLFW_KEY_D) == GLFW_PRESS){
+        cameraPos += glm::normalize(glm::cross(cameraFront, cameraUp)) * speed;
+        std::cout << "D pressed \n";
+    }
+
+    double xMousePosition, yMousePosition;
+    glfwGetCursorPos(m_window, &xMousePosition, &yMousePosition);
+
+    // Mouse Inputs
+    if(controlMouse){
+        if (m_firstMouse)
+        {
+            mouseLastX = xMousePosition;
+            mouseLastY = yMousePosition;
+            m_firstMouse = false;
+        }
+  
+        float yoffset = mouseLastY - yMousePosition; 
+        float xoffset = xMousePosition - mouseLastX;
+        mouseLastX = xMousePosition;
+        mouseLastY = yMousePosition;
+
+        xoffset *= mouseSentivity;
+        yoffset *= mouseSentivity;
+
+        yawAngle   += xoffset;
+        pitchAngle += yoffset;
+
+        if(pitchAngle > 89.0f)
+            pitchAngle = 89.0f;
+        if(pitchAngle < -89.0f)
+            pitchAngle = -89.0f;
+
+        glm::vec3 direction;
+        direction.x = cos(glm::radians(yawAngle)) * cos(glm::radians(pitchAngle));
+        direction.y = sin(glm::radians(pitchAngle));
+        direction.z = sin(glm::radians(yawAngle)) * cos(glm::radians(pitchAngle));
+        cameraFront = glm::normalize(direction);
+    }
+}   
 
 void WindowManager::init()
 {
@@ -138,20 +213,13 @@ void WindowManager::handleKeyInput(int key, int scancode, int action, int mods)
         glfwSetWindowShouldClose(m_window, true);
     }
 
-    if(key == GLFW_KEY_W && action == GLFW_PRESS){
-        std::cout << "W Key Pressed\n";
-    }
-
     if(key == GLFW_KEY_TAB && action == GLFW_PRESS){
         std::cout << "Tab pressed, toggling UI\n";
         showUI = !showUI;
     }
 
-    if(key == GLFW_KEY_UP && action == GLFW_PRESS){
-        mixParameter += 0.1;
-    }else if(key == GLFW_KEY_DOWN && action == GLFW_PRESS){
-        mixParameter -= 0.01;
+    if(key == GLFW_KEY_M && action == GLFW_PRESS){
+        std::cout << "Toggling Mouse\n";
+        controlMouse = !controlMouse;
     }
-
-
 }
