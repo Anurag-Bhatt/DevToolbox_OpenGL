@@ -11,10 +11,10 @@
 #include "Shader.hpp"
 #include "Mesh.hpp"
 #include "Texture.hpp"
+#include "Camera.hpp"
 
 // GLM = OpenGL Maths
 #include <glm/glm.hpp>
-#include <glm/gtc/matrix_transform.hpp>
 #include <glm/gtc/type_ptr.hpp>
 
 /**
@@ -112,69 +112,49 @@ int main() {
     glm::mat4 projection;
     projection = glm::perspective(glm::radians(45.0f), window.getAspectRatio(), 0.1f, 100.0f);
 
+    Camera cam;
+    glfwSetInputMode(window.getWindow(), GLFW_CURSOR, GLFW_CURSOR_DISABLED);
+
+    
     while (window.shoulBeOpen()) {
         
-        std::cout << window.deltaTime() << " is the deltaTime\n";
-        window.processInput();
+        std::cout << window.getDeltaTime() << " is the deltaTime\n";
+        //window.processInput();
         window.clearBuffer(bgColor); 
         window.beginUIFrame();
+        cam.processKeyboardInput(window.getWindow(), window.getDeltaTime());
+        cam.processMouseInput(window.getWindow());
         
         // myShader.setMat4("model", model);
-        glm::mat4 view;
-        myShader.setMat4("view", view);
-        myShader.setMat4("projection", projection);
+        // glm::mat4 view;
+        // view = glm::lookAt(window.cameraPos, window.cameraPos + window.cameraFront, window.cameraUp);
+        myShader.setMat4("view", cam.lookAt());
+        myShader.setMat4("projection",projection);
         
-        view = glm::lookAt(window.cameraPos, window.cameraPos + window.cameraFront, window.cameraUp);
 
         // Your ImGui UI
-        if(window.showUI){
-            ImGui::Begin("Settings");
-            ImGui::Text("Welcome to your Raytracer");
-            
-            static bool buttonPressed = false;
-            if(ImGui::Button("Render cubes")){
-                buttonPressed = !buttonPressed;
-            }
-
-            if(buttonPressed)
-            {   
-                myShader.use();
-                
-                static float cameraSpeed = 1.0f;
-                ImGui::InputFloat("Camera Speed", &cameraSpeed);
-                window.cameraSpeed = cameraSpeed;
-
-                static float mixParameter;
-                ImGui::InputFloat("Mix Parameter", &mixParameter, 0.01, 0.1);
-                myShader.setFloat("mixParameter", mixParameter);
-                static float rotationSpeed;
-                ImGui::InputFloat("Rotation Speed", &rotationSpeed, 0.01, 0.1);
-                // glm::mat4 rotate(1.0f);
-                // model = glm::rotate(model, deltaTime * rotationSpeed *glm::radians(50.0f), glm::vec3(1.0f, 0.0f, 0.0f));
-                tex1.bind();
-                tex2.bind(1);
-                
-                myShader.setInt("texture2", 0);
-                myShader.setInt("texture2", 1);
-
-                quad.bind();
-                for(unsigned int i = 0; i < cubePositions.size(); i++){
-            
-                    glm::mat4 model = glm::mat4(1.0f);
-                    model = glm::translate(model, cubePositions[i]);
-                    float angle = 20.0f * i * sin(glfwGetTime()); 
-                    model = glm::rotate(model, rotationSpeed * glm::radians(angle), glm::vec3(1.0f, 0.3f, 0.5f));
-                    myShader.setMat4("model", model);
-                    quad.draw();
-                }
-                // glDrawArrays(GL_TRIANGLES, 0, 36);
-            }
-            
-            ImGui::End();
+        myShader.use();
+        // glm::mat4 rotate(1.0f);
+        // model = glm::rotate(model, deltaTime * rotationSpeed *glm::radians(50.0f), glm::vec3(1.0f, 0.0f, 0.0f));
+        tex1.bind();
+        tex2.bind(1);
+        
+        myShader.setInt("texture1", 0);
+        myShader.setInt("texture2", 1);
+        quad.bind();
+        for(unsigned int i = 0; i < cubePositions.size(); i++){
+    
+            glm::mat4 model = glm::mat4(1.0f);
+            model = glm::translate(model, cubePositions[i]);
+            // float angle = 20.0f * i * sin(glfwGetTime()); 
+            // model = glm::rotate(model, rotationSpeed * glm::radians(angle), glm::vec3(1.0f, 0.3f, 0.5f));
+            myShader.setMat4("model", model);
+            quad.draw();
         }
+        // glDrawArrays(GL_TRIANGLES, 0, 36);
        
        
-        window.renderUI(bgColor);
+        window.renderUI();
         window.pollEvents();
         window.swapBuffers();
     }

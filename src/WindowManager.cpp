@@ -72,7 +72,7 @@ void WindowManager::beginUIFrame() const
     ImGui::NewFrame();
 }
 
-void WindowManager::renderUI(Color &bgColor) const
+void WindowManager::renderUI() const
 {
     ImGui::Render();
     ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
@@ -83,7 +83,7 @@ float WindowManager::getAspectRatio() const
     return static_cast<float>(m_width/m_height);
 }
 
-float WindowManager::deltaTime()
+float WindowManager::getDeltaTime()
 {
     float currentTime = static_cast<float>(glfwGetTime());
     m_deltaTime = currentTime - m_lastFrameTime;
@@ -96,65 +96,7 @@ GLFWwindow *WindowManager::getWindow()
 {
     return m_window;
 }
-
-void WindowManager::processInput()
-{
-    std::cout << "Processing Input \n";
-
-    float speed = cameraSpeed * m_deltaTime;
-    if(glfwGetKey(m_window, GLFW_KEY_W) == GLFW_PRESS){
-        cameraPos += speed * cameraFront;
-        std::cout << "W pressed \n";
-    }
-    if(glfwGetKey(m_window, GLFW_KEY_S) == GLFW_PRESS){
-        cameraPos -= speed * cameraFront;
-        std::cout << "S pressed \n";
-    }
-    if(glfwGetKey(m_window, GLFW_KEY_A) == GLFW_PRESS){
-        cameraPos -= glm::normalize(glm::cross(cameraFront, cameraUp)) * speed;
-        std::cout << "A pressed \n";
-    }
-    if(glfwGetKey(m_window, GLFW_KEY_D) == GLFW_PRESS){
-        cameraPos += glm::normalize(glm::cross(cameraFront, cameraUp)) * speed;
-        std::cout << "D pressed \n";
-    }
-
-    double xMousePosition, yMousePosition;
-    glfwGetCursorPos(m_window, &xMousePosition, &yMousePosition);
-
-    // Mouse Inputs
-    if(controlMouse){
-        if (m_firstMouse)
-        {
-            mouseLastX = xMousePosition;
-            mouseLastY = yMousePosition;
-            m_firstMouse = false;
-        }
-  
-        float yoffset = mouseLastY - yMousePosition; 
-        float xoffset = xMousePosition - mouseLastX;
-        mouseLastX = xMousePosition;
-        mouseLastY = yMousePosition;
-
-        xoffset *= mouseSentivity;
-        yoffset *= mouseSentivity;
-
-        yawAngle   += xoffset;
-        pitchAngle += yoffset;
-
-        if(pitchAngle > 89.0f)
-            pitchAngle = 89.0f;
-        if(pitchAngle < -89.0f)
-            pitchAngle = -89.0f;
-
-        glm::vec3 direction;
-        direction.x = cos(glm::radians(yawAngle)) * cos(glm::radians(pitchAngle));
-        direction.y = sin(glm::radians(pitchAngle));
-        direction.z = sin(glm::radians(yawAngle)) * cos(glm::radians(pitchAngle));
-        cameraFront = glm::normalize(direction);
-    }
-}   
-
+ 
 void WindowManager::init()
 {
     if (!glfwInit()) {
@@ -218,8 +160,8 @@ void WindowManager::handleKeyInput(int key, int scancode, int action, int mods)
         showUI = !showUI;
     }
 
+    // camera control extracted to Camera.hpp, will do someting about this
     if(key == GLFW_KEY_M && action == GLFW_PRESS){
         std::cout << "Toggling Mouse\n";
-        controlMouse = !controlMouse;
     }
 }
