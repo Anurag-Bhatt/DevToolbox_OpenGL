@@ -38,6 +38,7 @@ add_executable(${PROJECT_NAME}
     src/Mesh.cpp
     src/Texture.cpp
     src/Camera.cpp
+    src/Object.cpp
 )
 
 # Include main include dir

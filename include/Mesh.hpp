@@ -9,11 +9,16 @@ public:
     Mesh(std::vector<float> &vertices, std::vector<unsigned int> &indices);
     ~Mesh();
 
+    Mesh(const Mesh&) = delete;
+    Mesh& operator=(const Mesh&) = delete;
+    Mesh(Mesh&&) noexcept;
+    Mesh& operator=(Mesh&&) noexcept;
+
     void bind()const;
     void unbind()const;
     void draw()const;
 
-    void setLayout(const std::vector<unsigned int> &layout);
+    void setLayout(const std::vector<unsigned int> layout);
 
 private:
 
@@ -24,6 +29,6 @@ private:
     
 
     std::vector<unsigned int> m_layout;
-    unsigned int m_stride;
+    unsigned int m_stride = 0;
 
 };
