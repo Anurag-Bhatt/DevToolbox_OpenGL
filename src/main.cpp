@@ -35,49 +35,56 @@ int main() {
     
     Shader myShader("../shaders/screen.vert", "../shaders/raytrace.frag");
 
-    std::vector<float> cubeVertices = {
-        -0.5f, -0.5f, -0.5f,  0.0f, 0.0f,
-         0.5f, -0.5f, -0.5f,  1.0f, 0.0f,
-         0.5f,  0.5f, -0.5f,  1.0f, 1.0f,
-         0.5f,  0.5f, -0.5f,  1.0f, 1.0f,
-        -0.5f,  0.5f, -0.5f,  0.0f, 1.0f,
-        -0.5f, -0.5f, -0.5f,  0.0f, 0.0f,
+ 
+    std::vector<float> vertices = {
+            // position         // uv
+        -0.5f, -0.5f, -0.5f,  0.0f, 0.0f, // 0
+         0.5f, -0.5f, -0.5f,  1.0f, 0.0f, // 1
+         0.5f,  0.5f, -0.5f,  1.0f, 1.0f, // 2
+        -0.5f,  0.5f, -0.5f,  0.0f, 1.0f, // 3
 
-        -0.5f, -0.5f,  0.5f,  0.0f, 0.0f,
-         0.5f, -0.5f,  0.5f,  1.0f, 0.0f,
-         0.5f,  0.5f,  0.5f,  1.0f, 1.0f,
-         0.5f,  0.5f,  0.5f,  1.0f, 1.0f,
-        -0.5f,  0.5f,  0.5f,  0.0f, 1.0f,
-        -0.5f, -0.5f,  0.5f,  0.0f, 0.0f,
+        -0.5f, -0.5f,  0.5f,  0.0f, 0.0f, // 4
+         0.5f, -0.5f,  0.5f,  1.0f, 0.0f, // 5
+         0.5f,  0.5f,  0.5f,  1.0f, 1.0f, // 6
+        -0.5f,  0.5f,  0.5f,  0.0f, 1.0f, // 7
 
-        -0.5f,  0.5f,  0.5f,  1.0f, 0.0f,
-        -0.5f,  0.5f, -0.5f,  1.0f, 1.0f,
-        -0.5f, -0.5f, -0.5f,  0.0f, 1.0f,
-        -0.5f, -0.5f, -0.5f,  0.0f, 1.0f,
-        -0.5f, -0.5f,  0.5f,  0.0f, 0.0f,
-        -0.5f,  0.5f,  0.5f,  1.0f, 0.0f,
+        -0.5f,  0.5f,  0.5f,  1.0f, 0.0f, // 8
+        -0.5f,  0.5f, -0.5f,  1.0f, 1.0f, // 9
+        -0.5f, -0.5f, -0.5f,  0.0f, 1.0f, // 10
+        -0.5f, -0.5f,  0.5f,  0.0f, 0.0f, // 11
 
-         0.5f,  0.5f,  0.5f,  1.0f, 0.0f,
-         0.5f,  0.5f, -0.5f,  1.0f, 1.0f,
-         0.5f, -0.5f, -0.5f,  0.0f, 1.0f,
-         0.5f, -0.5f, -0.5f,  0.0f, 1.0f,
-         0.5f, -0.5f,  0.5f,  0.0f, 0.0f,
-         0.5f,  0.5f,  0.5f,  1.0f, 0.0f,
+         0.5f,  0.5f,  0.5f,  1.0f, 0.0f, // 12
+         0.5f,  0.5f, -0.5f,  1.0f, 1.0f, // 13
+         0.5f, -0.5f, -0.5f,  0.0f, 1.0f, // 14
+         0.5f, -0.5f,  0.5f,  0.0f, 0.0f, // 15
 
-        -0.5f, -0.5f, -0.5f,  0.0f, 1.0f,
-         0.5f, -0.5f, -0.5f,  1.0f, 1.0f,
-         0.5f, -0.5f,  0.5f,  1.0f, 0.0f,
-         0.5f, -0.5f,  0.5f,  1.0f, 0.0f,
-        -0.5f, -0.5f,  0.5f,  0.0f, 0.0f,
-        -0.5f, -0.5f, -0.5f,  0.0f, 1.0f,
+        -0.5f, -0.5f, -0.5f,  0.0f, 1.0f, // 16
+         0.5f, -0.5f, -0.5f,  1.0f, 1.0f, // 17
+         0.5f, -0.5f,  0.5f,  1.0f, 0.0f, // 18
+        -0.5f, -0.5f,  0.5f,  0.0f, 0.0f, // 19
 
-        -0.5f,  0.5f, -0.5f,  0.0f, 1.0f,
-         0.5f,  0.5f, -0.5f,  1.0f, 1.0f,
-         0.5f,  0.5f,  0.5f,  1.0f, 0.0f,
-         0.5f,  0.5f,  0.5f,  1.0f, 0.0f,
-        -0.5f,  0.5f,  0.5f,  0.0f, 0.0f,
-        -0.5f,  0.5f, -0.5f,  0.0f, 1.0f
+        -0.5f,  0.5f, -0.5f,  0.0f, 1.0f, // 20
+         0.5f,  0.5f, -0.5f,  1.0f, 1.0f, // 21
+         0.5f,  0.5f,  0.5f,  1.0f, 0.0f, // 22
+        -0.5f,  0.5f,  0.5f,  0.0f, 0.0f  // 23
     };
+
+    std::vector<unsigned int> indices = {
+        // back face
+        0, 1, 2, 2, 3, 0,
+        // front face
+        4, 5, 6, 6, 7, 4,
+        // left face
+        8, 9,10,10,11, 8,
+        // right face
+        2,13,14,14,15,12,
+        // bottom face
+        6,17,18,18,19,16,
+        // top face
+        0,21,22,22,23,20
+    };
+
+
 
     Texture tex1("../assets/images/container.jpg");
     Texture tex2("../assets/images/awesomeface.png");
@@ -95,7 +102,7 @@ int main() {
         glm::vec3(-1.3f,  1.0f, -1.5f)  
     };
 
-    auto sharedCubeMesh = std::make_shared<Mesh>(cubeVertices);
+    auto sharedCubeMesh = std::make_shared<Mesh>(vertices, indices);
     sharedCubeMesh->setLayout({3, 2});
 
     std::vector<Object> objects;
@@ -104,11 +111,6 @@ int main() {
         newObject.setTransform(p);
         objects.emplace_back(newObject);
     }
-
-    // Mesh quad(cubeVertices);
-    
-    Object cube(cubeVertices);
-    cube.setLayout({3, 2});
 
     Camera cam;
     glfwSetInputMode(window.getWindow(), GLFW_CURSOR, GLFW_CURSOR_DISABLED);
@@ -144,20 +146,6 @@ int main() {
             myShader.setMat4("model", model);
             obj.draw();
         }
-
-
-        // for(unsigned int i = 0; i < cubePositions.size(); i++){
-    
-        //     glm::mat4 model = glm::mat4(1.0f);
-        //     model = glm::translate(model, cubePositions[i]);
-            
-        //     myShader.setMat4("model", model);
-        //     cube.draw();
-        // }
-
-        
-        // myShader.setMat4("model", model);
-        // cube.draw();
 
         window.renderUI();
         window.pollEvents();
