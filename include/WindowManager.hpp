@@ -54,4 +54,5 @@ private:
     static void frameBufferSizeCallback(GLFWwindow* window, int width, int height);
     static void keyCallback(GLFWwindow* window, int key, int scancode, int action, int mods);
     void handleKeyInput(int key, int scancode, int action, int mods); // instance method
+    static void cursonEnterCallBack(GLFWwindow* window, int entered);
 };

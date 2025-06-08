@@ -60,6 +60,12 @@ void Shader::setFloat(const std::string &name, float value) const
     glUniform1f(uLocation, value);
 }
 
+void Shader::setVec3(const std::string &name, float x, float y, float z) const
+{
+    unsigned int uniformLocation = glGetUniformLocation(m_ProgramID, name.c_str());
+    glUniform3f(uniformLocation, x, y, z);
+}
+
 void Shader::setMat4(const std::string &name, glm::mat4 trans) const
 {
     unsigned int uniformLocation = glGetUniformLocation(m_ProgramID, name.c_str());

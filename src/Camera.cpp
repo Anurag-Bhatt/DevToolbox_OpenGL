@@ -19,7 +19,9 @@ Camera::~Camera()
 void Camera::processMouseInput(GLFWwindow* window)
 {
     // Mouse Input
-    static double mouseLastX, mouseLastY;
+
+    
+
     double xMousePosition, yMousePosition;
     glfwGetCursorPos(window, &xMousePosition, &yMousePosition);
 

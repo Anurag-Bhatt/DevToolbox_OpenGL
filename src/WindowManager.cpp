@@ -32,6 +32,7 @@ WindowManager::WindowManager(const int screenWidth, const int screenHeight, std:
     glfwSetWindowUserPointer(m_window, this);
     glfwSetKeyCallback(m_window, keyCallback); 
     glfwSetFramebufferSizeCallback(m_window, frameBufferSizeCallback);
+    glfwSetCursorEnterCallback(m_window, cursonEnterCallBack);
 
     initImGui();
 
@@ -164,4 +165,9 @@ void WindowManager::handleKeyInput(int key, int scancode, int action, int mods)
     if(key == GLFW_KEY_M && action == GLFW_PRESS){
         std::cout << "Toggling Mouse\n";
     }
+}
+
+void WindowManager::cursonEnterCallBack(GLFWwindow *window, int entered)
+{
+    
 }

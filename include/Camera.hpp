@@ -19,12 +19,13 @@ public:
     ~Camera();
 
     void processKeyboardInput(GLFWwindow *window, float deltaTime);
-    void processMouseInput(GLFWwindow* window);
+    void processMouseInput(GLFWwindow* windown);
 
     glm::mat4 lookAt();
     glm::mat4 perspective(float aspectRatio);
 
     bool firstMouse = true;
+    double mouseLastX, mouseLastY;
 
 private:
 

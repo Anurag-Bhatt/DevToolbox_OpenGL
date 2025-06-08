@@ -3,9 +3,9 @@
 #include "Mesh.hpp"
 
 Mesh::Mesh(std::vector<float> &vertices)
-: m_vertexCount(vertices.size()), m_EBO(0), m_layout(0)
+:   m_vertexCount(vertices.size()), m_EBO(0), m_layout(0)
 {
-    std::cout << "Vertices size: " << vertices.size() << "\n";
+    // std::cout << "Vertices size: " << vertices.size() << "\n";
     glGenVertexArrays(1, &m_VAO);
     glGenBuffers(1, &m_VBO);
 
@@ -18,7 +18,7 @@ Mesh::Mesh(std::vector<float> &vertices)
 }
 
 Mesh::Mesh(std::vector<float> &vertices, std::vector<unsigned int> &indices)
-: m_indexCount(indices.size()), m_EBO(0), m_layout(0)
+:   m_vertexCount(vertices.size()), m_indexCount(indices.size()), m_EBO(0), m_layout(0)
 {
     glGenVertexArrays(1, &m_VAO);
     glGenBuffers(1, &m_VBO);
@@ -116,9 +116,8 @@ void Mesh::setLayout(const std::vector<unsigned int> layout)
     for(auto count : m_layout){
         m_stride += count;
     }
-
-    m_vertexCount /= m_stride;
-
+    
+    m_vertexCount = m_vertexCount/(int)m_stride;
     std::cout << "Stride: " << m_stride <<", Vertex Count: " << m_vertexCount << "\n";
 
     m_stride *=  sizeof(float);
