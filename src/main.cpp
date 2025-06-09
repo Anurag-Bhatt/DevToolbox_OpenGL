@@ -4,6 +4,8 @@
 #include <filesystem>
 #include <cmath>
 #include <random>
+#include <vector>
+#include <fstream>
 
 #include "imgui.h"
 
@@ -17,6 +19,14 @@
 // GLM = OpenGL Maths
 #include <glm/glm.hpp>
 #include <glm/gtc/type_ptr.hpp>
+
+
+#include <nlohmann/json.hpp>
+using json = nlohmann::json;
+
+std::vector<json> loadMaterial(std::filesystem::path materialPath);
+
+void showMaterial(std::vector<json> &materials);
 
 /**
  * Improve keyboard input and add mouse input.
@@ -165,6 +175,11 @@ int main() {
     glm::mat4 lightModel = glm::mat4(1.0f);
     lightModel = glm::translate(lightModel,lightSource.getPosition());
 
+    float lightCirclingRadius = 1.0f;
+
+    std::filesystem::path materialPath("../Material/Materials.json");
+    std::vector<json> materials = loadMaterial(materialPath);
+
     while (window.shoulBeOpen()) {
         
         window.clearBuffer(bgColor); 
@@ -172,14 +187,51 @@ int main() {
         
         
         // ImGui UI, for helping in debugging
-        if(window.showUI){
-            static float lightPosition[3] = { 0.0f, 1.0f, 0.0f }; // default value
-            ImGui::InputFloat3("Light Position", lightPosition);
 
-            // Reset to identity before applying the translation
-            lightModel = glm::mat4(1.0f);
-            lightModel = glm::translate(lightModel, glm::vec3(lightPosition[0], lightPosition[1], lightPosition[2]));
+        static float ambientStrength, specularStrength;
+        static int shininess;
+
+        lightModel = glm::mat4(1.0f);
+        if(window.showUI){
+            
+            ImGui::Begin("Settings");
+
+            ImGui::InputFloat("Ambience", &ambientStrength);
+            ImGui::InputFloat("Specular Strength", &specularStrength);
+            ImGui::InputInt("Shininess", &shininess);
+
+            static bool showMats;
+            if(ImGui::Button("Show Materials")){
+                showMats =! showMats;
+            }
+
+            if(showMats){
+                showMaterial(materials);
+            }
+
+            static int selectedMaterial;
+            static std::vector<std::string> materialNames;
+            materialNames.clear();
+            for (const auto& mat : materials) {
+                materialNames.push_back(mat["name"]);
+            }
+
+            ImGui::Combo("Material", &selectedMaterial,
+                [](void* data, int idx, const char** out_text) {
+                    auto& names = *static_cast<std::vector<std::string>*>(data);
+                    if (idx < 0 || idx >= names.size()) return false;
+                    *out_text = names[idx].c_str();
+                    return true;
+                },
+                static_cast<void*>(&materialNames), materialNames.size()
+            );
+
+            ImGui::End();
         }
+
+        glm::vec3 dynamicLightPos = glm::vec3(lightCirclingRadius * cos(glfwGetTime()), 0.0f, lightCirclingRadius * sin(glfwGetTime()));
+        lightModel = glm::translate(lightModel, dynamicLightPos);
+        lightSource.setTransform(dynamicLightPos);
 
         glm::mat4 projection = glm::perspective(glm::radians(45.0f), window.getAspectRatio(), 0.1f, 100.0f);
 
@@ -191,6 +243,10 @@ int main() {
         cubeShader.setVec3("viewPosition", cam.getPosition());
         cubeShader.setMat4("view", cam.lookAt());
         cubeShader.setMat4("projection", projection);
+
+        cubeShader.setFloat("ambientStrength", ambientStrength);
+        cubeShader.setFloat("specularStrength", specularStrength);
+        cubeShader.setInt("shininess", shininess);
         
         tex1.bind(0);
         tex2.bind(1);        
@@ -198,6 +254,7 @@ int main() {
         cubeShader.setInt("texture1", 0);
         cubeShader.setInt("texture2", 1);
         
+        glm::mat4 model = glm::mat4(1.0f);
         model = glm::translate(model, cube.getPosition());
         cubeShader.setMat4("model", model);
         cube.draw();
@@ -228,4 +285,47 @@ int main() {
     }
 
     return 0;
+}
+
+std::vector<json> loadMaterial(std::filesystem::path materialPath)
+{
+    // TODO: insert return statement here
+    std::vector<json> material;
+
+    std::ifstream file(materialPath);
+    json j;
+    file >> j;
+
+    return j.get<std::vector<json>>();
+}
+
+void showMaterial(std::vector<json> &materials)
+{
+    ImGui::Begin("Materials");
+
+    for(auto& mat : materials){
+
+        if(ImGui::CollapsingHeader(mat["name"].get<std::string>().c_str())){
+
+            ImGui::Text("Ambient: %.3f, %.3f, %.3f", 
+            mat["ambient"][0].get<float>(),
+            mat["ambient"][1].get<float>(),
+            mat["ambient"][2].get<float>());
+
+            ImGui::Text("Diffusion: %.3f, %.3f, %.3f", 
+            mat["diffuse"][0].get<float>(),
+            mat["diffuse"][1].get<float>(),
+            mat["diffuse"][2].get<float>());
+
+            ImGui::Text("Specular: %.3f, %.3f, %.3f", 
+            mat["specular"][0].get<float>(),
+            mat["specular"][1].get<float>(),
+            mat["specular"][2].get<float>());
+
+            ImGui::Text("Shininess: %.3f", mat["shininess"].get<float>());
+        }
+
+    }
+
+    ImGui::End();
 }

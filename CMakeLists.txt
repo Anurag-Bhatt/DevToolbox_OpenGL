@@ -23,6 +23,7 @@ add_library(imgui STATIC ${IMGUI_SOURCES})
 target_include_directories(imgui PUBLIC
     include/ImGui
     include/ImGui/backend
+    include/nlohmann
 )
 
 # Find required packages
