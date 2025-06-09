@@ -15,16 +15,18 @@ uniform vec3 lightColor;
 
 void main()
 {
+    // Ambient
+    float ambientStrength = 0.1; // strength of ambient light
+    
+    // Diffusion
     vec3 normalizedNormal   = normalize(Normal);
     vec3 normalizedLightDirection = normalize(lightPosition - FragPos);
-
-    float specularStrength = 0.5;
-    float ambientStrength = 0.1; // strength of ambient light
     float diffuseImpact = max(dot(normalizedNormal, normalizedLightDirection), 0.0);
 
+    // Specular
     vec3 viewDirection = normalize(viewPosition - FragPos);
     vec3 reflectDirection = reflect(-normalizedLightDirection, normalizedNormal);
-
+    float specularStrength = 0.5;
     int shininess = 32;
     float spec = pow(max(dot(viewDirection, reflectDirection), 0.0), shininess);
     float specular = specularStrength * spec;
