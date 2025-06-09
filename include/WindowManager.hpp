@@ -32,7 +32,7 @@ public:
 
     GLFWwindow* getWindow();
 
-
+    bool toggleMouseControl = false;
 
 private:
 

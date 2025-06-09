@@ -163,7 +163,14 @@ void WindowManager::handleKeyInput(int key, int scancode, int action, int mods)
 
     // camera control extracted to Camera.hpp, will do someting about this
     if(key == GLFW_KEY_M && action == GLFW_PRESS){
-        std::cout << "Toggling Mouse\n";
+        if(toggleMouseControl == false){
+            toggleMouseControl = true;
+            glfwSetInputMode(m_window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
+        }else {
+            toggleMouseControl = false; 
+            glfwSetInputMode(m_window, GLFW_CURSOR, GLFW_CURSOR_NORMAL);  
+        }
+        std::cout << "Toggling Mouse: " << (toggleMouseControl ? "UI Mode\n" : "Camera Mode\n");
     }
 }
 
