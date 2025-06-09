@@ -23,8 +23,10 @@ public:
 
     glm::mat4 lookAt();
     glm::mat4 perspective(float aspectRatio);
+    glm::vec3 getPosition()const;
 
     bool firstMouse = true;
+    static bool mouseControlEnabled;
     double mouseLastX, mouseLastY;
 
 private:
